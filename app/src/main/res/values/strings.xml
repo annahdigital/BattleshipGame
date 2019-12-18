@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Battleship Game</string>
+    <string name="player1_name">Player 1</string>
+    <string name="player2_name">Player 2</string>
+    <string name="zero_counter">0</string>
+</resources>
