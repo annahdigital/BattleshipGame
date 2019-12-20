@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "90157295440",
+    "firebase_url": "https://battleshipgamebyannah.firebaseio.com",
+    "project_id": "battleshipgamebyannah",
+    "storage_bucket": "battleshipgamebyannah.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90157295440:android:7579d7627c391b8cf5ae55",
+        "android_client_info": {
+          "package_name": "com.example.battleshipgame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90157295440-9orlh5mna6cf0p4oq44lo6vgp235nj7m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.battleshipgame",
+            "certificate_hash": "a6f40e5cf2cb9ddb7f6528d29b365e951b638bfc"
+          }
+        },
+        {
+          "client_id": "90157295440-u392glh17fq6ma6kp12vqn54vqv4oilc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6a5LOJSDqOQE-mBqV81wqY-RBX1I77Fs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90157295440-u392glh17fq6ma6kp12vqn54vqv4oilc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
