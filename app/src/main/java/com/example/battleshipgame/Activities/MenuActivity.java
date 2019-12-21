@@ -79,6 +79,6 @@ public class MenuActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, CreateFieldActivity.class);
         this.startActivity(intent);
-        this.finish();
+        //this.finish();
     }
 }

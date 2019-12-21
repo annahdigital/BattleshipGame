@@ -38,7 +38,7 @@ public class FieldView extends View {
     int cruisersCount = 3;
     int destroyersCount = 2;
     int torpedosCount = 1;
-    int currentBattleshipsCount = 0;
+    public int currentBattleshipsCount = 0;
     int currentCruisersCount = 0;
     int currentDestroyersCount = 0;
     int currentTorpedosCount = 0;

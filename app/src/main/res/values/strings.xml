@@ -19,7 +19,7 @@
     <string name="title">Battleship</string>
     <string name="rules">Rules</string>
     <string name="rule1">On one grid the player arranges ships and records the shots by the opponent. On the other grid the player records their own shots. </string>
-    <string name="rule2">Your ships: \n  1 battleship (4 blocks) \n 2 cruisers (3 blocks) \n 3 destroyers (2 blocks) \n 4 torpedos (1 blocks) </string>
+    <string name="rule2">Your ships: \n  4 battleship (1 blocks) \n 3 cruisers (1 blocks) \n 2 destroyers (3 blocks) \n 1 torpeda (4 blocks) </string>
     <string name="rule3">Each ship occupies a number of consecutive squares on the grid, arranged either horizontally or vertically.</string>
     <string name="rule4"> If all of a player\'s ships have been sunk, the game is over and their opponent wins. If all ships of both players are sunk by the end of the round, the game is a draw.</string>
     <string name="ok">Ok!</string>
@@ -29,4 +29,7 @@
     <string name="killes">Killed!</string>
     <string name="oppontent_move">Opponent\'s move!</string>
     <string name="my_field">My field</string>
+    <string name="game_id_title">Your game id:</string>
+    <string name="copy_id">Now your friend can join game by this id.</string>
+    <string name="copy">Copy to clickboard</string>
 </resources>
