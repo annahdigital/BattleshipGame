@@ -8,8 +8,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Toast;
 
 import com.example.battleshipgame.Grid.FieldView;
 import com.example.battleshipgame.R;
@@ -32,6 +35,14 @@ public class CreateFieldActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showHint();
+            }
+        });
+        Button goToGameButton = findViewById(R.id.get_started_field_created);
+        goToGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!fieldView.endCreation())
+                    showError();
             }
         });
     }
@@ -62,5 +73,18 @@ public class CreateFieldActivity extends AppCompatActivity {
                 mPopupWindow.dismiss();
             }
         });
+    }
+
+    private void showError()
+    {
+        Toast toast = Toast.makeText(this,
+                "Incorrect placement for ships.",
+                Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        LinearLayout toastContainer = (LinearLayout) toast.getView();
+        ImageView catImageView = new ImageView(this);
+        catImageView.setImageResource(R.drawable.kitty_wow);
+        toastContainer.addView(catImageView, 0);
+        toast.show();
     }
 }

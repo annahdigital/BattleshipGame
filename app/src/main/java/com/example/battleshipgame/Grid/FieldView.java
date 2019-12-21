@@ -5,14 +5,21 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.battleshipgame.Models.CellMode;
 import com.example.battleshipgame.Models.Field;
 import com.example.battleshipgame.R;
+
+import java.util.ArrayList;
 
 public class FieldView extends View {
     private int cellWidth;
@@ -26,6 +33,16 @@ public class FieldView extends View {
     private Field field;
     private CurrentFieldMode fieldMode;
     private Context context;
+
+    int battleshipsCount = 4;
+    int cruisersCount = 3;
+    int destroyersCount = 2;
+    int torpedosCount = 1;
+    int currentBattleshipsCount = 0;
+    int currentCruisersCount = 0;
+    int currentDestroyersCount = 0;
+    int currentTorpedosCount = 0;
+    boolean [][] correctCells;
 
     public FieldView(Context context)
     {
@@ -137,34 +154,222 @@ public class FieldView extends View {
 
             int x = (int) event.getX() / cellWidth;
             int y = (int) event.getY() / cellHeight;
+            if (x < field.width && y < field.height) {
 
-            if (fieldMode == CurrentFieldMode.CREATION) {
-                if (field.getCell(x, y) == CellMode.EMPTY)
-                {
-                    field.setCellMode(CellMode.SHIP, x, y);
-                }
-                else
-                    field.setCellMode(CellMode.EMPTY, x, y);
+                if (fieldMode == CurrentFieldMode.CREATION) {
+                    if (field.getCell(x, y) == CellMode.EMPTY) {
+                        field.setCellMode(CellMode.SHIP, x, y);
+                    } else
+                        field.setCellMode(CellMode.EMPTY, x, y);
+                    if (!tryToPlay())
+                        showError();
 
-            }
-            else {
-                if (field.getCell(x, y) == CellMode.EMPTY)
-                {
-                    field.setCellMode(CellMode.MISS, x, y);
-                    //updategrid
-                }
-                else if (field.getCell(x, y) == CellMode.SHIP)
-                {
-                    field.setCellMode(CellMode.HIT, x, y);
-                    //updategrid
-                }
+                } else {
+                    if (field.getCell(x, y) == CellMode.EMPTY) {
+                        field.setCellMode(CellMode.MISS, x, y);
+                        //updategrid
+                    } else if (field.getCell(x, y) == CellMode.SHIP) {
+                        field.setCellMode(CellMode.HIT, x, y);
+                        //updategrid
+                    }
 
+                }
             }
         }
         invalidate();
         return true;
     }
 
+    public boolean endCreation(){
+        if (tryToPlay())
+        {
+            return battleshipsCount == currentBattleshipsCount && cruisersCount == currentCruisersCount &&
+                    torpedosCount == currentTorpedosCount && destroyersCount == currentDestroyersCount;
+        }
+        else return false;
+    }
+
+    public boolean tryToPlay()
+    {
+        correctCells = new boolean[field.height][field.width];
+        currentBattleshipsCount = 0;
+        currentCruisersCount = 0;
+        currentDestroyersCount = 0;
+        currentTorpedosCount = 0;
+        for (int i = 0; i < field.height; i++)
+        {
+            for (int j = 0; j < field.width; j++)
+                if (tryToPlayWithCell(i, j) == false)
+                    return false;
+        }
+        return true;
+        /*return battleshipsCount == currentBattleshipsCount && cruisersCount == currentCruisersCount &&
+                torpedosCount == currentTorpedosCount && destroyersCount == currentDestroyersCount;*/
+    }
+
+    private boolean tryToPlayWithCell(int i, int j)
+    {
+        if (!checkNeighbors(i, j)) {
+            return false;
+        }
+        else
+        {
+            correctCells[i][j] = true;
+            return true;
+        }
+
+    }
+
+    private boolean checkNeighbors(int i, int j)
+    {
+        if (correctCells[i][j])
+            return true;
+        if (field.getCell(i, j) == CellMode.EMPTY)
+            return true;
+        int nearbyShipCells = 0;
+        ArrayList<CellMode> neighborsCells = new ArrayList<>();
+        ArrayList<CellMode> cornerCells = new ArrayList<>();
+        if (i > 0) {
+            if (!correctCells[i-1][j])
+                neighborsCells.add(field.getCell(i - 1, j));
+            if (j + 1 < field.height) {
+                if (!correctCells[i-1][j+1])
+                    cornerCells.add(field.getCell(i - 1, j + 1));
+            }
+            if (j > 0) {
+                if (!correctCells[i-1][j-1])
+                    cornerCells.add(field.getCell(i - 1, j - 1));
+            }
+        }
+        if (j + 1 < field.height)
+            if (!correctCells[i][j+1])
+                neighborsCells.add(field.getCell(i, j+1));
+        if (j - 1 >= 0)
+            if (!correctCells[i][j-1])
+                neighborsCells.add(field.getCell(i, j - 1));
+        if (i + 1 < field.width)
+        {
+            if (!correctCells[i+1][j])
+                neighborsCells.add(field.getCell(i + 1, j));
+            if (j + 1 < field.height) {
+                if (!correctCells[i+1][j+1])
+                    cornerCells.add(field.getCell(i + 1, j + 1));
+            }
+            if (j - 1 >= 0) {
+                if (!correctCells[i+1][j-1])
+                    cornerCells.add(field.getCell(i + 1, j - 1));
+            }
+        }
+        for (CellMode corner : cornerCells)
+        {
+            if (corner == CellMode.SHIP) {
+                return false;
+            }
+        }
+        for (CellMode neighbor : neighborsCells)
+        {
+            if (neighbor == CellMode.SHIP)
+                nearbyShipCells++;
+        }
+        if (nearbyShipCells == 0) {
+            currentBattleshipsCount++;
+            return true;
+        }
+        else if (nearbyShipCells < 2)
+            return checkLength(i, j);
+        else {
+            return false;
+        }
+    }
+
+    private boolean checkLength(int i, int j)
+    {
+        int shipLength = 1;
+        CellMode leftCell = null, rightCell = null, upperCell = null, lowerCell = null;
+        if (i + 1 < field.width)
+            rightCell = field.getCell(i+1, j);
+        if (j - 1 >= 0)
+            upperCell = field.getCell(i, j-1);
+        if (j + 1 < field.height)
+            lowerCell = field.getCell(i, j+1);
+        if (i - 1 >= 0)
+            leftCell = field.getCell(i-1, j);
+
+
+        if (leftCell == CellMode.SHIP)
+        {
+            int iter = i - 1;
+            while (iter >= 0 && field.getCell(iter, j) == CellMode.SHIP)
+            {
+                if (correctCells[iter][j])
+                    return false;
+                shipLength++;
+                correctCells[iter][j] = true;
+                iter--;
+            }
+        }
+
+        else if (rightCell == CellMode.SHIP)
+        {
+            int iter = i + 1;
+            while (iter < field.width && field.getCell(iter, j) == CellMode.SHIP)
+            {
+                if (correctCells[iter][j])
+                    return false;
+                shipLength++;
+                correctCells[iter][j] = true;
+                iter++;
+            }
+        }
+
+        else if (upperCell == CellMode.SHIP)
+        {
+            int iter = j - 1;
+            while (iter >= 0 && field.getCell(i, iter) == CellMode.SHIP)
+            {
+                if (correctCells[i][iter])
+                    return false;
+                shipLength++;
+                correctCells[i][iter] = true;
+                iter--;
+            }
+        }
+        else if (lowerCell == CellMode.SHIP)
+        {
+            int iter = j + 1;
+            while (iter < field.height && field.getCell(i, iter) == CellMode.SHIP)
+            {
+                if (correctCells[i][iter])
+                    return false;
+                shipLength++;
+                correctCells[i][iter] = true;
+                iter++;
+            }
+        }
+
+        if (shipLength > 4)
+            return false;
+        else if (shipLength == 2)
+            currentCruisersCount++;
+        else if (shipLength == 3)
+            currentDestroyersCount++;
+        else if (shipLength == 4)
+            currentTorpedosCount++;
+        return true;
+    }
+
+    private void showError()
+    {
+        Toast toast = Toast.makeText(context,
+                "Incorrect placement for ships.",
+                Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        LinearLayout toastContainer = (LinearLayout) toast.getView();
+        ImageView catImageView = new ImageView(context);
+        catImageView.setImageResource(R.drawable.kitty_wow);
+        toastContainer.addView(catImageView, 0);
+        toast.show();
+    }
 
 
 }

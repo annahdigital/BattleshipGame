@@ -7,6 +7,19 @@
     android:background="@color/colorPrimaryLight"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/get_started_field_created"
+        style="@style/MainButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/player_field"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:fontFamily="serif-monospace"
+        android:padding="15dp"
+        android:text="@string/start"
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/my_field_title"
         android:layout_width="match_parent"
