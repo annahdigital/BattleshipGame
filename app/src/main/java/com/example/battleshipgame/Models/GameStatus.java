@@ -25,7 +25,7 @@ public class GameStatus {
         this.player_2 = p2;
         this.player_1_field = p1f;
         this.player_2_field = p2f;
-        this.currentMoveByPlayer = null;
+        this.currentMoveByPlayer = "p_1_move";
     }
 
     public void setPlayer_1(String p1)

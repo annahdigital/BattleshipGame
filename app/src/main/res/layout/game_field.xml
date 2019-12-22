@@ -50,6 +50,13 @@
         app:backgroundTint="@color/colorPrimaryDark"
         app:srcCompat="@drawable/info_letter" />
 
+    <ProgressBar
+        android:id="@+id/progressBarJoinGame2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:theme="@style/ContentLoadingProgress" />
+
     <com.example.battleshipgame.Grid.FieldView
         android:id="@+id/player_field"
         android:layout_width="380dp"

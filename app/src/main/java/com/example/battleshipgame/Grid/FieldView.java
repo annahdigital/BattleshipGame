@@ -126,7 +126,7 @@ public class FieldView extends View {
             {
                 if (field.getCell(i, j) == CellMode.SHIP)
                 {
-                    if (fieldMode != CurrentFieldMode.OPPONENT)
+                    if (fieldMode != CurrentFieldMode.OPPONENT && fieldMode != CurrentFieldMode.READONLY)
                     {
                         canvas.drawRect(i*cellWidth, j * cellHeight, (i+1) * cellWidth, (j+1) * cellHeight, PurplePaint);
                     }
@@ -173,13 +173,13 @@ public class FieldView extends View {
                     if (!tryToPlay())
                         showError();
 
-                } else {
+                } else if (fieldMode == CurrentFieldMode.OPPONENT){
                     if (field.getCell(x, y) == CellMode.EMPTY) {
                         field.setCellMode(CellMode.MISS, x, y);
-                        ((GameActivity)this.context).updatingMove(MoveType.HIT);
+                        ((GameActivity)this.context).updatingMove(MoveType.MISS);
                     } else if (field.getCell(x, y) == CellMode.SHIP) {
                         field.setCellMode(CellMode.HIT, x, y);
-                        ((GameActivity)this.context).updatingMove(MoveType.MISS);
+                        ((GameActivity)this.context).updatingMove(MoveType.HIT);
                     }
 
                 }

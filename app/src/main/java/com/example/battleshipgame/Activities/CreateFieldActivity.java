@@ -61,6 +61,9 @@ public class CreateFieldActivity extends AppCompatActivity {
         setContentView(R.layout.game_field);
         startingGame = getIntent().getBooleanExtra("startingGame", false);
 
+        mProgressBar = findViewById(R.id.progressBarJoinGame2);
+        mProgressBar.setVisibility(View.GONE);
+
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
@@ -152,8 +155,6 @@ public class CreateFieldActivity extends AppCompatActivity {
             }
         });
 
-        mProgressBar = customView.findViewById(R.id.progressBarStartGame);
-        mProgressBar.setVisibility(View.GONE);
 
         Button copyButton = customView.findViewById(R.id.copy_to_clipboard);
         copyButton.setOnClickListener(new View.OnClickListener() {
@@ -187,8 +188,6 @@ public class CreateFieldActivity extends AppCompatActivity {
                 idPopupWindow.showAtLocation(findViewById(R.id.create_field_layout), Gravity.CENTER,0,0);
             }
         });
-        mProgressBar = customView.findViewById(R.id.progressBarJoinGame);
-        mProgressBar.setVisibility(View.GONE);
         final EditText idInput = customView.findViewById(R.id.id_input);
         Button okButton = customView.findViewById(R.id.game_id_joining_ok);
         okButton.setOnClickListener(new View.OnClickListener() {
@@ -216,7 +215,6 @@ public class CreateFieldActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         game = database.getReference("games").child(id);
         ValueEventListener checkListener;
-        Log.println(Log.ERROR, "fffffffffffffff", "fffffff");
 
         if (start) {
             checkListener = new ValueEventListener() {

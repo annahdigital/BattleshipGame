@@ -56,12 +56,16 @@ public class GameActivity extends AppCompatActivity {
     private boolean secondPlayerJoined = false;
 
     private PopupWindow mPopupWindow;
+    private PopupWindow endOfTheGameWindow;
     private FieldView player_1_field;
     private FieldView player_2_field;
     private TextView player_1_name;
     private TextView player_2_name;
     private TextView player_1_name_field;
     private TextView player_2_name_field;
+    private TextView player_1_scoreView;
+    private TextView player_2_scoreView;
+
     private  int score1 = 0;
     private  int score2 = 0;
     private final int winPoints = 20;
@@ -74,9 +78,11 @@ public class GameActivity extends AppCompatActivity {
         started_game = getIntent().getBooleanExtra("start", false);
 
         player_1_name = findViewById(R.id.player1_name);
-        player_2_name = findViewById(R.id.player2_name);
         player_1_name_field = findViewById(R.id.player_1_field_name);
+        player_1_scoreView = findViewById(R.id.score_player1);
+        player_2_name = findViewById(R.id.player2_name);
         player_2_name_field = findViewById(R.id.player_2_field_name);
+        player_2_scoreView = findViewById(R.id.score_player2);
 
         player_1_field = findViewById(R.id.player1_field);
         player_2_field = findViewById(R.id.player2_field);
@@ -86,11 +92,11 @@ public class GameActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         game = database.getReference("games").child(gameId);
+        currentMove = game.child("currentMoveByPlayer");
         player_1_field_db = game.child("player_1_field");
         player_2_field_db = game.child("player_2_field");
         player_1_score = game.child("score_1");
         player_2_score = game.child("score_2");
-        currentMove = game.child("currentMoveByPlayer");
         player_1 = game.child("player_1");
         player_2 = game.child("player_2");
 
@@ -99,7 +105,6 @@ public class GameActivity extends AppCompatActivity {
         trackCurrentMove();
         trackScore1Update();
         trackScore2Update();
-
         initStatsView();
 
        final FloatingActionButton showHintButton = findViewById(R.id.floatingActionButtonInfo);
@@ -151,20 +156,23 @@ public class GameActivity extends AppCompatActivity {
 
     private void trackCurrentMove()
     {
+        Log.println(Log.ERROR, "track current move", "t");
         currentMove.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!secondPlayerJoined)
                     return;
+                Log.println(Log.ERROR, "хер", "ня");
                 if (dataSnapshot.getValue(String.class) == null)
                 {
                     onBackPressed();
                     return;
                 }
                 String value = dataSnapshot.getValue(String.class);
+                Log.println(Log.ERROR, "value", value);
                 if (started_game)
                 {
-                    if (value == "p_1_move")
+                    if (value.equals("p_1_move"))
                     {
                         currentMoveMessage(true);
                         player_2_field.setFieldMode(CurrentFieldMode.OPPONENT);
@@ -175,7 +183,7 @@ public class GameActivity extends AppCompatActivity {
                     }
                 }
                 else {
-                    if (value == "p_2_move")
+                    if (value.equals("p_2_move"))
                     {
                         currentMoveMessage(true);
                         player_2_field.setFieldMode(CurrentFieldMode.OPPONENT);
@@ -242,7 +250,7 @@ public class GameActivity extends AppCompatActivity {
                     return;
                 }
                 String value = dataSnapshot.getValue(String.class);
-                if (value.isEmpty()) {
+                if (!value.isEmpty()) {
                     Gson gson = new Gson();
                     Type type = new TypeToken<Field>() {
                     }.getType();
@@ -296,9 +304,14 @@ public class GameActivity extends AppCompatActivity {
                     onBackPressed();
                     return;
                 }
-                player_1_name.setText(value);
-                player_1_name_field.setText(value);
-                player_1.removeEventListener(this);
+                if (started_game) {
+                    player_1_name.setText(value);
+                    player_1_name_field.setText(value);
+                }
+                else {
+                    player_2_name.setText(value);
+                    player_2_name_field.setText(value);
+                }
             }
 
             @Override
@@ -315,9 +328,14 @@ public class GameActivity extends AppCompatActivity {
                     onBackPressed();
                     return;
                 }
-                player_2_name.setText(value);
-                player_2_name_field.setText(value);
-                player_2.removeEventListener(this);
+                if (started_game) {
+                    player_2_name.setText(value);
+                    player_2_name_field.setText(value);
+                }
+                else {
+                    player_1_name.setText(value);
+                    player_1_name_field.setText(value);
+                }
             }
 
             @Override
@@ -371,17 +389,49 @@ public class GameActivity extends AppCompatActivity {
             mes = "CONGRATULATIONS! YOU WIN!";
         else
             mes = "Unfortunately, you lost...";
-        Toast toast = Toast.makeText(this,
-                mes, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        LinearLayout toastContainer = (LinearLayout) toast.getView();
-        ImageView catImageView = new ImageView(this);
+        saveStats();
+        Context mContext = getApplicationContext();
+        // popup window for entering rss
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = Objects.requireNonNull(inflater).inflate(R.layout.end_of_the_game_layout, null);
+        endOfTheGameWindow = new PopupWindow(
+                customView,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                true
+        );
+        endOfTheGameWindow.setElevation(5.0f);
+        findViewById(R.id.game_holder).post(new Runnable() {
+            @Override
+            public void run() {
+                endOfTheGameWindow.showAtLocation(findViewById(R.id.game_holder), Gravity.CENTER,0,0);
+            }
+        });
+        TextView statusView = customView.findViewById(R.id.win_status);
+        statusView.setText(mes);
+        ImageView kittyView = customView.findViewById(R.id.imageViewEND_OF_THE_GAME);
         if (didWin)
-            catImageView.setImageResource(R.drawable.kitty_win);
+            kittyView.setImageResource(R.drawable.kitty_win);
         else
-            catImageView.setImageResource(R.drawable.kitty_lost);
-        toastContainer.addView(catImageView, 0);
-        toast.show();
+            kittyView.setImageResource(R.drawable.kitty_lost);
+        Button okButton = customView.findViewById(R.id.ok_end_of_the_game);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                database.getReference("games").child(gameId).removeValue();
+                endOfTheGameWindow.dismiss();
+                onBackPressed();
+            }
+        });
+    }
+
+    private void saveStats()
+    {
+        DatabaseReference stats = database.getReference("stats").child(gameId);
+        stats.child("player_1").setValue(player_1_name.getText());
+        stats.child("score_1").setValue(score1);
+        stats.child("player_2").setValue(player_2_name.getText());
+        stats.child("score_2").setValue(score2);
     }
 
     private void showHint()
@@ -397,10 +447,10 @@ public class GameActivity extends AppCompatActivity {
                 true
         );
         mPopupWindow.setElevation(5.0f);
-        findViewById(R.id.create_field_layout).post(new Runnable() {
+        findViewById(R.id.game_holder).post(new Runnable() {
             @Override
             public void run() {
-                mPopupWindow.showAtLocation(findViewById(R.id.create_field_layout), Gravity.CENTER,0,0);
+                mPopupWindow.showAtLocation(findViewById(R.id.game_holder), Gravity.CENTER,0,0);
             }
         });
         Button okButton = customView.findViewById(R.id.rules_ok);
@@ -414,11 +464,69 @@ public class GameActivity extends AppCompatActivity {
 
     private void trackScore1Update()
     {
+        player_1_score.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue(int.class) == null) {
+                    onBackPressed();
+                    return;
+                }
+                int value = dataSnapshot.getValue(int.class);
+                score1 = value;
+                if (started_game)
+                {
+                    player_1_scoreView.setText(String.valueOf(score1));
+                }
+                else {
+                    player_2_scoreView.setText(String.valueOf(score1));
+                }
+                if (value == winPoints)
+                {
+                    if (started_game)
+                        gameEnded(true);
+                    else
+                        gameEnded(false);
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void trackScore2Update()
     {
+        player_2_score.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue(int.class) == null) {
+                    onBackPressed();
+                    return;
+                }
+                int value = dataSnapshot.getValue(int.class);
+                score2 = value;
+                if (started_game)
+                {
+                    player_2_scoreView.setText(String.valueOf(score2));
+                }
+                else {
+                    player_1_scoreView.setText(String.valueOf(score2));
+                }
+                if (value == winPoints)
+                {
+                    if (!started_game)
+                        gameEnded(true);
+                    else
+                        gameEnded(false);
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
