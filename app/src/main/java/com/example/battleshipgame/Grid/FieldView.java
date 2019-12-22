@@ -15,8 +15,10 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import com.example.battleshipgame.Activities.GameActivity;
 import com.example.battleshipgame.Models.CellMode;
 import com.example.battleshipgame.Models.Field;
+import com.example.battleshipgame.Models.MoveType;
 import com.example.battleshipgame.R;
 
 import java.util.ArrayList;
@@ -71,8 +73,15 @@ public class FieldView extends View {
         this.fieldMode = CurrentFieldMode.CREATION;
     }
 
+    public void initializeField(CurrentFieldMode mode)
+    {
+        field = new Field();
+        this.fieldMode = mode;
+    }
+
     public void setFieldMode(CurrentFieldMode mode)
     {   this.fieldMode = mode;  }
+
 
     public void updateField(Field field)
     {
@@ -122,11 +131,11 @@ public class FieldView extends View {
                         canvas.drawRect(i*cellWidth, j * cellHeight, (i+1) * cellWidth, (j+1) * cellHeight, PurplePaint);
                     }
                 }
-                else if (field.getCell(j, i) == CellMode.MISS)
+                else if (field.getCell(i, j) == CellMode.MISS)
                 {
                     canvas.drawRect(i*cellWidth, j * cellHeight, (i+1) * cellWidth, (j+1) * cellHeight, GreyishPaint);
                 }
-                else if (field.getCell(j, i) == CellMode.HIT)
+                else if (field.getCell(i , j) == CellMode.HIT)
                 {
                     canvas.drawRect(i*cellWidth, j * cellHeight, (i+1) * cellWidth, (j+1) * cellHeight, RedPaint);
                 }
@@ -167,10 +176,10 @@ public class FieldView extends View {
                 } else {
                     if (field.getCell(x, y) == CellMode.EMPTY) {
                         field.setCellMode(CellMode.MISS, x, y);
-                        //updategrid
+                        ((GameActivity)this.context).updatingMove(MoveType.HIT);
                     } else if (field.getCell(x, y) == CellMode.SHIP) {
                         field.setCellMode(CellMode.HIT, x, y);
-                        //updategrid
+                        ((GameActivity)this.context).updatingMove(MoveType.MISS);
                     }
 
                 }

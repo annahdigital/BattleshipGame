@@ -8,8 +8,7 @@ public class GameStatus {
     private int score_2;
     private String player_1_field;
     private String player_2_field;
-    private int currentMoveX;
-    private int currentMoveY;
+    private String currentMoveByPlayer;
 
 
     public GameStatus(String p1, String p2, int sc1, int sc2)
@@ -18,6 +17,15 @@ public class GameStatus {
         this.player_2 = p2;
         this.score_1 = sc1;
         this.score_2 = sc2;
+    }
+
+    public GameStatus(String p1, String p2, String p1f, String p2f)
+    {
+        this.player_1 = p1;
+        this.player_2 = p2;
+        this.player_1_field = p1f;
+        this.player_2_field = p2f;
+        this.currentMoveByPlayer = null;
     }
 
     public void setPlayer_1(String p1)
@@ -44,17 +52,11 @@ public class GameStatus {
     public int getScore_2()
     {   return score_2;     }
 
-    public int getCurrentMoveX()
-    {   return currentMoveX;     }
+    public String getCurrentMoveByPlayer()
+    {   return currentMoveByPlayer;     }
 
-    public int getCurrentMoveY()
-    {   return currentMoveY;     }
-
-    public void setCurrentMoveX(int sc)
-    {   this.currentMoveX = sc;     }
-
-    public void setCurrentY(int sc)
-    {   this.currentMoveY = sc;     }
+    public void setCurrentMoveByPlayer(String sc)
+    {   this.currentMoveByPlayer = sc;     }
 
     public void setPlayer_1_field(String f)
     {   this.player_1_field = f;    }

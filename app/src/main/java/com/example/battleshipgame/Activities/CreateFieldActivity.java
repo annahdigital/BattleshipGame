@@ -1,23 +1,29 @@
 package com.example.battleshipgame.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.example.battleshipgame.Models.Field;
+import com.example.battleshipgame.Models.GameStatus;
+import com.google.gson.Gson;
 import android.widget.Toast;
 
 import com.example.battleshipgame.Grid.FieldView;
@@ -25,7 +31,11 @@ import com.example.battleshipgame.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -35,8 +45,13 @@ public class CreateFieldActivity extends AppCompatActivity {
     private FieldView fieldView;
     private PopupWindow mPopupWindow;
     private PopupWindow idPopupWindow;
+    private ProgressBar mProgressBar;
+    private String id;
+
+    private boolean startingGame;
 
     private FirebaseDatabase database;
+    private DatabaseReference game;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
@@ -44,13 +59,13 @@ public class CreateFieldActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_field);
+        startingGame = getIntent().getBooleanExtra("startingGame", false);
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        database = FirebaseDatabase.getInstance();
 
         fieldView = findViewById(R.id.player_field);
-        fieldView.createField();;
+        fieldView.createField();
         FloatingActionButton fab = findViewById(R.id.floatingActionButtonInfo2);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +80,10 @@ public class CreateFieldActivity extends AppCompatActivity {
                 if (!fieldView.endCreation())
                     showError();
                 else {
-                    getGameId();
+                    if (startingGame)
+                        getGameId();
+                    else
+                        enterGameId();
                 }
             }
         });
@@ -121,16 +139,21 @@ public class CreateFieldActivity extends AppCompatActivity {
 
         final TextView idView = customView.findViewById(R.id.game_id_view);
         UUID U_id = UUID.randomUUID();
-        String id = U_id.toString().replace("-", "");
+        id = U_id.toString().replace("-", "");
         idView.setText(id);
 
         Button okButton = customView.findViewById(R.id.game_id_getting_ok);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mProgressBar.setVisibility(View.VISIBLE);
+                connect(true);
                 idPopupWindow.dismiss();
             }
         });
+
+        mProgressBar = customView.findViewById(R.id.progressBarStartGame);
+        mProgressBar.setVisibility(View.GONE);
 
         Button copyButton = customView.findViewById(R.id.copy_to_clipboard);
         copyButton.setOnClickListener(new View.OnClickListener() {
@@ -145,11 +168,103 @@ public class CreateFieldActivity extends AppCompatActivity {
         });
     }
 
-    private void goToGame()
+    private void enterGameId()
+    {
+        Context mContext = getApplicationContext();
+        // popup window for entering rss
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = Objects.requireNonNull(inflater).inflate(R.layout.game_joining_id_layout, null);
+        idPopupWindow = new PopupWindow(
+                customView,
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT,
+                true
+        );
+        idPopupWindow.setElevation(5.0f);
+        findViewById(R.id.create_field_layout).post(new Runnable() {
+            @Override
+            public void run() {
+                idPopupWindow.showAtLocation(findViewById(R.id.create_field_layout), Gravity.CENTER,0,0);
+            }
+        });
+        mProgressBar = customView.findViewById(R.id.progressBarJoinGame);
+        mProgressBar.setVisibility(View.GONE);
+        final EditText idInput = customView.findViewById(R.id.id_input);
+        Button okButton = customView.findViewById(R.id.game_id_joining_ok);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mProgressBar.setVisibility(View.VISIBLE);
+                id = idInput.getText().toString();
+                connect(false);
+                idPopupWindow.dismiss();
+            }
+        });
+    }
+
+    private void goToGame(Boolean start)
     {
         Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("id", id);
+        intent.putExtra("start", start);
         this.startActivity(intent);
         this.finish();
+    }
+
+    public void connect(Boolean start)
+    {
+        database = FirebaseDatabase.getInstance();
+        game = database.getReference("games").child(id);
+        ValueEventListener checkListener;
+        Log.println(Log.ERROR, "fffffffffffffff", "fffffff");
+
+        if (start) {
+            checkListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()) {
+                        Gson gson = new Gson();
+                        String jsonGridCreated = gson.toJson(fieldView.getField());
+                        String jsonGridCreated2 = gson.toJson(new Field());
+                        game.removeEventListener(this);
+                        game.setValue(new GameStatus(currentUser.getDisplayName(), "", jsonGridCreated, jsonGridCreated2));
+                        goToGame(true);
+                    }
+                    else {
+                        showIdIncorrectMessage();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            };
+            game.addValueEventListener(checkListener);
+        }
+        else {
+            checkListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        Gson gson = new Gson();
+                        String jsonGridCreated = gson.toJson(fieldView.getField());
+                        game.removeEventListener(this);
+                        game.child("player_2").setValue(currentUser.getDisplayName());
+                        game.child("player_2_field").setValue(jsonGridCreated);
+                        goToGame(false);
+                    }
+                    else showIdIncorrectMessage();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            };
+            game.addValueEventListener(checkListener);
+        }
+
     }
 
     private void showError()
@@ -163,5 +278,25 @@ public class CreateFieldActivity extends AppCompatActivity {
         catImageView.setImageResource(R.drawable.kitty_wow);
         toastContainer.addView(catImageView, 0);
         toast.show();
+    }
+
+    private void showIdIncorrectMessage()
+    {
+        Toast toast = Toast.makeText(this,
+                "Incorrect id.",
+                Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        LinearLayout toastContainer = (LinearLayout) toast.getView();
+        ImageView catImageView = new ImageView(this);
+        catImageView.setImageResource(R.drawable.kitty_wow);
+        toastContainer.addView(catImageView, 0);
+        toast.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (database != null)
+            database.getReference("games").child(id).removeValue();
+        super.onBackPressed();
     }
 }

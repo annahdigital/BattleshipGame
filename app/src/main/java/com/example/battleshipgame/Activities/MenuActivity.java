@@ -52,6 +52,13 @@ public class MenuActivity extends AppCompatActivity {
                 goToCreation();
             }
         });
+        Button joinGameButton = findViewById(R.id.menu_join_game);
+        joinGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToJoining();
+            }
+        });
     }
 
     private void signOut() {
@@ -78,7 +85,15 @@ public class MenuActivity extends AppCompatActivity {
     private void goToCreation()
     {
         Intent intent = new Intent(this, CreateFieldActivity.class);
+        intent.putExtra("startingGame", true);
         this.startActivity(intent);
         //this.finish();
+    }
+
+    private void goToJoining()
+    {
+        Intent intent = new Intent(this, CreateFieldActivity.class);
+        intent.putExtra("startingGame", false);
+        this.startActivity(intent);
     }
 }

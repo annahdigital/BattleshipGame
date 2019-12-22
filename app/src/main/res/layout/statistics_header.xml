@@ -51,7 +51,7 @@
         android:fontFamily="monospace"
         android:gravity="center"
         android:text="@string/player2_name"
-        android:textSize="22sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/player1_name"
@@ -62,7 +62,7 @@
         android:fontFamily="monospace"
         android:gravity="center"
         android:text="@string/player1_name"
-        android:textSize="22sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/score_player1"
