@@ -33,4 +33,7 @@
     <string name="copy_id">Now your friend can join game by this id.</string>
     <string name="copy">Copy to clickboard</string>
     <string name="close">Close</string>
+    <string name="no_stats">No games yet!</string>
+    <string name="my_turn">my turn</string>
+    <string name="wait">waiting</string>
 </resources>

@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/player_1_field_name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/header_stat"
         android:layout_centerInParent="false"
@@ -76,5 +76,37 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:id="@+id/my_turn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/player_1_field_name"
+        android:layout_marginStart="20dp"
+        android:layout_toEndOf="@id/player_1_field_name"
+        android:background="@drawable/rounded_button"
+        android:fontFamily="serif-monospace"
+        android:padding="12dp"
+        android:text="@string/my_turn"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDarkest"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/wait_for_my_turn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/player_1_field_name"
+        android:layout_marginStart="20dp"
+        android:layout_toEndOf="@id/player_1_field_name"
+        android:background="@drawable/layout_bg_grey"
+        android:fontFamily="serif-monospace"
+        android:padding="12dp"
+        android:text="@string/wait"
+        android:textAllCaps="true"
+        android:textColor="@color/design_default_color_on_secondary"
+        android:textSize="10sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

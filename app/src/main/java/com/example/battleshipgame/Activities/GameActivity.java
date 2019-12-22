@@ -66,6 +66,9 @@ public class GameActivity extends AppCompatActivity {
     private TextView player_1_scoreView;
     private TextView player_2_scoreView;
 
+    private TextView myTurnView;
+    private TextView waitForMyTurnView;
+
     private  int score1 = 0;
     private  int score2 = 0;
     private final int winPoints = 20;
@@ -76,6 +79,11 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.game_layout);
         gameId = getIntent().getStringExtra("id");
         started_game = getIntent().getBooleanExtra("start", false);
+
+        myTurnView = findViewById(R.id.my_turn);
+        waitForMyTurnView = findViewById(R.id.wait_for_my_turn);
+        myTurnView.setVisibility(View.GONE);
+        waitForMyTurnView.setVisibility(View.GONE);
 
         player_1_name = findViewById(R.id.player1_name);
         player_1_name_field = findViewById(R.id.player_1_field_name);
@@ -367,6 +375,15 @@ public class GameActivity extends AppCompatActivity {
         catImageView.setImageResource(R.drawable.kitty);
         toastContainer.addView(catImageView, 0);
         toast.show();
+        if (your)
+        {
+            myTurnView.setVisibility(View.VISIBLE);
+            waitForMyTurnView.setVisibility(View.GONE);
+        }
+        else {
+            myTurnView.setVisibility(View.GONE);
+            waitForMyTurnView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void currentMoveStatusMessage()
