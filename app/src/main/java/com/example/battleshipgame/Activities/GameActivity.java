@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ public class GameActivity extends AppCompatActivity {
 
     private PopupWindow mPopupWindow;
     private PopupWindow endOfTheGameWindow;
+    private ProgressBar mProgressBar;
     private FieldView player_1_field;
     private FieldView player_2_field;
     private TextView player_1_name;
@@ -79,6 +81,8 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.game_layout);
         gameId = getIntent().getStringExtra("id");
         started_game = getIntent().getBooleanExtra("start", false);
+        mProgressBar = findViewById(R.id.progressBarGAMEWAIT);
+        mProgressBar.setVisibility(View.VISIBLE);
 
         myTurnView = findViewById(R.id.my_turn);
         waitForMyTurnView = findViewById(R.id.wait_for_my_turn);
@@ -108,12 +112,26 @@ public class GameActivity extends AppCompatActivity {
         player_1 = game.child("player_1");
         player_2 = game.child("player_2");
 
-        initFirstPlayerField();
-        initSecondPlayerField();
-        trackCurrentMove();
-        trackScore1Update();
-        trackScore2Update();
-        initStatsView();
+        player_2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.getValue(String.class).equals("")) {
+                    initFirstPlayerField();
+                    initSecondPlayerField();
+                    trackCurrentMove();
+                    trackScore1Update();
+                    trackScore2Update();
+                    initStatsView();
+                    mProgressBar.setVisibility(View.GONE);
+                    player_2.removeEventListener(this);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
        final FloatingActionButton showHintButton = findViewById(R.id.floatingActionButtonInfo);
        showHintButton.setOnClickListener(new View.OnClickListener() {
@@ -164,20 +182,17 @@ public class GameActivity extends AppCompatActivity {
 
     private void trackCurrentMove()
     {
-        Log.println(Log.ERROR, "track current move", "t");
         currentMove.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!secondPlayerJoined)
                     return;
-                Log.println(Log.ERROR, "хер", "ня");
                 if (dataSnapshot.getValue(String.class) == null)
                 {
                     onBackPressed();
                     return;
                 }
                 String value = dataSnapshot.getValue(String.class);
-                Log.println(Log.ERROR, "value", value);
                 if (started_game)
                 {
                     if (value.equals("p_1_move"))

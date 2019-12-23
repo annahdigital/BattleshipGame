@@ -109,4 +109,12 @@
         android:textSize="10sp"
         android:textStyle="bold" />
 
+    <ProgressBar
+        android:id="@+id/progressBarGAMEWAIT"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:theme="@style/ContentLoadingProgress"/>
+
 </RelativeLayout>
