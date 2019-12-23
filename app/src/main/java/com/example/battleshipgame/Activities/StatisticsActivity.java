@@ -58,17 +58,13 @@ public class StatisticsActivity extends AppCompatActivity {
         statsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (Map.Entry<String, Object> item : ((Map<String,Object>) dataSnapshot.getValue()).entrySet())
+                
+                for (DataSnapshot ds : dataSnapshot.getChildren())
                 {
-                    Map itemStat = (Map) item.getValue();
-                    if (currentUser.getDisplayName().equals(String.valueOf(itemStat.get("player_1"))) ||
-                                currentUser.getDisplayName().equals(String.valueOf(itemStat.get("player_2")))) {
-                        statistics.add(new GameStatistics(String.valueOf(itemStat.get("player_1")),
-                                String.valueOf(itemStat.get("player_2")),
-                                (int) (long) itemStat.get("score_1"),
-                                (int) (long) itemStat.get("score_2")));
-                    }
+                    GameStatistics value = ds.getValue(GameStatistics.class);
+                    if (value.getPlayer_1().equals(currentUser.getDisplayName()) ||
+                            value.getPlayer_2().equals(currentUser.getDisplayName()))
+                        statistics.add(value);
                 }
                 if (statistics.size() != 0) {
                     mRecyclerView.setAdapter(new StatisticsAdapter(statistics));
