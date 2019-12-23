@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +50,15 @@ public class GameActivity extends AppCompatActivity {
     private DatabaseReference player_1_score;
     private DatabaseReference player_2_score;
     private DatabaseReference currentMove;
+
+
+    private ValueEventListener field_1_listener;
+    private ValueEventListener field_2_listener;
+    private ValueEventListener moveChangesListener;
+    private ValueEventListener score_1_changedListener;
+    private ValueEventListener score_2_changedListener;
+    private ValueEventListener scoreView_1_listener;
+    private ValueEventListener scoreView_2_listener;
 
     private String gameId;
     private boolean started_game;
@@ -182,7 +190,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void trackCurrentMove()
     {
-        currentMove.addValueEventListener(new ValueEventListener() {
+        moveChangesListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!secondPlayerJoined)
@@ -225,12 +233,26 @@ public class GameActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        currentMove.addValueEventListener(moveChangesListener);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        currentMove.removeEventListener(moveChangesListener);
+        player_1_field_db.removeEventListener(field_1_listener);
+        player_2_field_db.removeEventListener(field_2_listener);
+        player_1.removeEventListener(scoreView_1_listener);
+        player_2.removeEventListener(scoreView_2_listener);
+        player_2_score.removeEventListener(score_2_changedListener);
+        player_1_score.removeEventListener(score_1_changedListener);
     }
 
     private void initFirstPlayerField()
     {
-        player_1_field_db.addValueEventListener(new ValueEventListener() {
+        field_1_listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue(String.class) == null)
@@ -255,12 +277,13 @@ public class GameActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        player_1_field_db.addValueEventListener(field_1_listener);
     }
 
     private void initSecondPlayerField()
     {
-        player_2_field_db.addValueEventListener(new ValueEventListener() {
+        field_2_listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue(String.class) == null)
@@ -289,7 +312,8 @@ public class GameActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        player_2_field_db.addValueEventListener(field_2_listener);
         player_2_field_db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -302,9 +326,6 @@ public class GameActivity extends AppCompatActivity {
                 if (!value.isEmpty() && started_game)
                 {
                     secondPlayerJoined = true;
-                    Toast.makeText(getApplicationContext(),
-                            "Opponent connects! Your move!",
-                            Toast.LENGTH_SHORT).show();
                     player_2_field.setFieldMode(CurrentFieldMode.OPPONENT);
                     player_2_field_db.removeEventListener(this);
                 }
@@ -319,7 +340,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void initStatsView()
     {
-        player_1.addValueEventListener(new ValueEventListener() {
+        scoreView_1_listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
@@ -341,9 +362,10 @@ public class GameActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        player_1.addValueEventListener(scoreView_1_listener);
 
-        player_2.addValueEventListener(new ValueEventListener() {
+        scoreView_2_listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
@@ -365,7 +387,8 @@ public class GameActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        player_2.addValueEventListener(scoreView_2_listener);
     }
 
     @Override
@@ -496,7 +519,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void trackScore1Update()
     {
-        player_1_score.addValueEventListener(new ValueEventListener() {
+        score_1_changedListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue(int.class) == null) {
@@ -525,12 +548,13 @@ public class GameActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        player_1_score.addValueEventListener(score_1_changedListener);
     }
 
     private void trackScore2Update()
     {
-        player_2_score.addValueEventListener(new ValueEventListener() {
+        score_2_changedListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue(int.class) == null) {
@@ -559,6 +583,21 @@ public class GameActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        player_2_score.addValueEventListener(score_2_changedListener);
     }
+
+    /*public void showShipDestroyed()
+    {
+        Log.println(Log.ERROR, "222222222222", "e");
+        Toast toast = Toast.makeText(this,
+                "SHIP DESTROYED.",
+                Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        LinearLayout toastContainer = (LinearLayout) toast.getView();
+        ImageView catImageView = new ImageView(this);
+        catImageView.setImageResource(R.drawable.fire);
+        toastContainer.addView(catImageView, 0);
+        toast.show();
+    }*/
 }

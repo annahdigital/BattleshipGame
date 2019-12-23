@@ -179,6 +179,7 @@ public class FieldView extends View {
                         ((GameActivity)this.context).updatingMove(MoveType.MISS);
                     } else if (field.getCell(x, y) == CellMode.SHIP) {
                         field.setCellMode(CellMode.HIT, x, y);
+                        //ifDestroyed(x, y);
                         ((GameActivity)this.context).updatingMove(MoveType.HIT);
                     }
 
@@ -188,6 +189,32 @@ public class FieldView extends View {
         invalidate();
         return true;
     }
+
+    /*private void ifDestroyed(int i, int j)
+    {
+        Log.println(Log.ERROR, "kek", "ff");
+        int nearbyShipCells = 0;
+        ArrayList<CellMode> neighborsCells = new ArrayList<>();
+        if (i > 0) {
+            neighborsCells.add(field.getCell(i - 1, j));
+        }
+        if (j + 1 < field.height)
+            neighborsCells.add(field.getCell(i, j+1));
+        if (j - 1 >= 0)
+            neighborsCells.add(field.getCell(i, j - 1));
+        if (i + 1 < field.width)
+            neighborsCells.add(field.getCell(i + 1, j));
+
+        for (CellMode neighbor : neighborsCells)
+        {
+            if (neighbor == CellMode.SHIP)
+                nearbyShipCells++;
+        }
+        Log.println(Log.ERROR, "d", String.valueOf(nearbyShipCells));
+        if (nearbyShipCells == 0)
+            ((GameActivity)this.context).showShipDestroyed();
+    }*/
+
 
     public boolean endCreation(){
         if (tryToPlay())
