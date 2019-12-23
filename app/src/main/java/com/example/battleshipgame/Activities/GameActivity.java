@@ -241,13 +241,20 @@ public class GameActivity extends AppCompatActivity {
     protected void onDestroy()
     {
         super.onDestroy();
-        currentMove.removeEventListener(moveChangesListener);
-        player_1_field_db.removeEventListener(field_1_listener);
-        player_2_field_db.removeEventListener(field_2_listener);
-        player_1.removeEventListener(scoreView_1_listener);
-        player_2.removeEventListener(scoreView_2_listener);
-        player_2_score.removeEventListener(score_2_changedListener);
-        player_1_score.removeEventListener(score_1_changedListener);
+        if (moveChangesListener != null)
+            currentMove.removeEventListener(moveChangesListener);
+        if (field_1_listener != null)
+            player_1_field_db.removeEventListener(field_1_listener);
+        if (field_2_listener != null)
+            player_2_field_db.removeEventListener(field_2_listener);
+        if (scoreView_1_listener != null)
+            player_1.removeEventListener(scoreView_1_listener);
+        if (scoreView_2_listener != null)
+            player_2.removeEventListener(scoreView_2_listener);
+        if (score_2_changedListener!= null)
+            player_2_score.removeEventListener(score_2_changedListener);
+        if (score_1_changedListener!= null)
+            player_1_score.removeEventListener(score_1_changedListener);
     }
 
     private void initFirstPlayerField()

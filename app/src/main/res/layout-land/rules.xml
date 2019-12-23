@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rules_holder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/colorPrimaryLight"
+    android:padding="20dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/rule2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/imageView2"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:layout_toEndOf="@id/imageView1"
+                android:fontFamily="monospace"
+                android:padding="5dp"
+                android:text="@string/rule2"
+                android:textColor="@color/colorPrimaryDarkest"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/rule1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/imageView1"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:layout_toEndOf="@id/imageView1"
+                android:fontFamily="monospace"
+                android:padding="5dp"
+                android:text="@string/rule1"
+                android:textColor="@color/colorPrimaryDarkest"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/rule1"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:contentDescription="@string/app_name"
+                android:src="@mipmap/idea" />
+
+            <TextView
+                android:id="@+id/rule4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/imageView4"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:layout_toEndOf="@id/imageView1"
+                android:fontFamily="monospace"
+                android:padding="5dp"
+                android:text="@string/rule4"
+                android:textColor="@color/colorPrimaryDarkest"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/rule2"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:contentDescription="@string/app_name"
+                android:src="@mipmap/idea" />
+
+            <TextView
+                android:id="@+id/rule3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/imageView3"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:layout_toEndOf="@id/imageView1"
+                android:fontFamily="monospace"
+                android:padding="5dp"
+                android:text="@string/rule3"
+                android:textColor="@color/colorPrimaryDarkest"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/rule3"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:contentDescription="@string/app_name"
+                android:src="@mipmap/idea" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/title_rules"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:contentDescription="@string/app_name"
+                android:src="@mipmap/idea" />
+
+            <Button
+                android:id="@+id/rules_ok"
+                style="@style/MainButtonStyle"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rule4"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="serif-monospace"
+                android:text="@string/ok"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/title_game_rules"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="serif-monospace"
+                android:text="@string/title"
+                android:textColor="@color/colorPrimaryDarkest"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/title_rules"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_game_rules"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="serif-monospace"
+                android:text="@string/rules"
+                android:textColor="@color/colorPrimaryDarkest"
+                android:textSize="38sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </ScrollView>
+
+
+</RelativeLayout>
