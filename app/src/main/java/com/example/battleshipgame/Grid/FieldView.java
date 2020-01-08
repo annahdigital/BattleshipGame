@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,27 +23,30 @@ import com.example.battleshipgame.R;
 import java.util.ArrayList;
 
 public class FieldView extends View {
-    private int cellWidth;
-    private int cellHeight;
 
     private Paint PurplePaint;
     private Paint RedPaint;
     private Paint GreyishPaint;
     private Paint FieldGridPaint;
 
+    private int cellWidth;
+    private int cellHeight;
+
     private Field field;
     private CurrentFieldMode fieldMode;
-    private Context context;
+    private final Context context;
 
-    int battleshipsCount = 4;
-    int cruisersCount = 3;
-    int destroyersCount = 2;
-    int torpedosCount = 1;
-    public int currentBattleshipsCount = 0;
-    int currentCruisersCount = 0;
-    int currentDestroyersCount = 0;
-    int currentTorpedosCount = 0;
-    boolean [][] correctCells;
+    // final values for comparing and validating
+    private final static int battleshipsCount = 4;
+    private final static int cruisersCount = 3;
+    private final static int destroyersCount = 2;
+    private final static int torpedosCount = 1;
+
+    private int currentBattleshipsCount = 0;
+    private int currentCruisersCount = 0;
+    private int currentDestroyersCount = 0;
+    private int currentTorpedosCount = 0;
+    private boolean [][] correctCells;
 
     public FieldView(Context context)
     {
@@ -86,6 +88,8 @@ public class FieldView extends View {
     public void updateField(Field field)
     {
         this.field = field;
+        // the view's appearance may need to be changed, the view will call invalidate().
+        // invalidate() were called, the framework will take care of measuring, laying out, and drawing the tree as appropriate.
         invalidate();
     }
 
@@ -120,6 +124,19 @@ public class FieldView extends View {
         int width = getWidth();
         int height = getHeight();
 
+        for (int i = 1; i < field.width; i++) {
+            canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, FieldGridPaint);
+        }
+
+        for (int i = 1; i < field.height; i++) {
+            canvas.drawLine(0, i * cellHeight, width, i * cellHeight, FieldGridPaint);
+        }
+
+        canvas.drawLine(0, 0, 0, height, FieldGridPaint);
+        canvas.drawLine(width, 0, width, height, FieldGridPaint);
+        canvas.drawLine(0, 0, width, 0, FieldGridPaint);
+        canvas.drawLine(0, height, width, height, FieldGridPaint);
+
         for (int i = 0; i < field.height; i++)
         {
             for (int j = 0; j < field.width; j++)
@@ -141,19 +158,6 @@ public class FieldView extends View {
                 }
             }
         }
-
-        for (int i = 1; i < field.width; i++) {
-            canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, FieldGridPaint);
-        }
-
-        for (int i = 1; i < field.height; i++) {
-            canvas.drawLine(0, i * cellHeight, width, i * cellHeight, FieldGridPaint);
-        }
-
-        canvas.drawLine(0, 0, 0, height, FieldGridPaint);
-        canvas.drawLine(width, 0, width, height, FieldGridPaint);
-        canvas.drawLine(0, 0, width, 0, FieldGridPaint);
-        canvas.drawLine(0, height, width, height, FieldGridPaint);
     }
 
     @Override
@@ -225,7 +229,7 @@ public class FieldView extends View {
         else return false;
     }
 
-    public boolean tryToPlay()
+    private boolean tryToPlay()
     {
         correctCells = new boolean[field.height][field.width];
         currentBattleshipsCount = 0;
@@ -235,12 +239,10 @@ public class FieldView extends View {
         for (int i = 0; i < field.height; i++)
         {
             for (int j = 0; j < field.width; j++)
-                if (tryToPlayWithCell(i, j) == false)
+                if (!tryToPlayWithCell(i, j))
                     return false;
         }
         return true;
-        /*return battleshipsCount == currentBattleshipsCount && cruisersCount == currentCruisersCount &&
-                torpedosCount == currentTorpedosCount && destroyersCount == currentDestroyersCount;*/
     }
 
     private boolean tryToPlayWithCell(int i, int j)

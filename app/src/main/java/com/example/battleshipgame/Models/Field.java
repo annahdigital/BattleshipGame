@@ -2,9 +2,9 @@ package com.example.battleshipgame.Models;
 
 public class Field {
 
-    public int height;
-    public int width;
-    private CellMode[][] cells;
+    public final int height;
+    public final int width;
+    private final CellMode[][] cells;
 
     public Field()
     {
@@ -16,8 +16,10 @@ public class Field {
                 cells[i][j] = CellMode.EMPTY;
     }
 
-    public CellMode[][] getCells()
-    {   return cells;   }
+// --Commented out by Inspection START (8.1.20 14.40):
+//    public CellMode[][] getCells()
+//    {   return cells;   }
+// --Commented out by Inspection STOP (8.1.20 14.40)
 
     public CellMode getCell(int x, int y)
     {   return cells[x][y];     }

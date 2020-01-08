@@ -9,7 +9,7 @@
         android:roundIcon="@drawable/kitty"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".Activities.StatisticsActivity"></activity>
+        <activity android:name=".Activities.StatisticsActivity" />
         <activity android:name=".Activities.GameActivity" />
         <activity android:name=".Activities.CreateFieldActivity" />
         <activity android:name=".Activities.MenuActivity" />

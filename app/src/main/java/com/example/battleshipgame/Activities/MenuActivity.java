@@ -18,10 +18,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 public class MenuActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
     private GoogleSignInClient googleSignInClient;
 
     @Override
@@ -29,7 +30,7 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -37,7 +38,7 @@ public class MenuActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
         TextView nameView = findViewById(R.id.menu_username);
-        nameView.setText(currentUser.getDisplayName());
+        nameView.setText(Objects.requireNonNull(currentUser).getDisplayName());
         Button signOutButton = findViewById(R.id.menu_log_out);
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override

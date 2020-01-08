@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 
@@ -28,14 +27,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Objects;
 
 public class StatisticsActivity extends AppCompatActivity {
 
-    private FirebaseDatabase database;
-    private DatabaseReference statsRef;
-    private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
     private ArrayList<GameStatistics> statistics;
@@ -47,22 +42,22 @@ public class StatisticsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         mProgressBar = findViewById(R.id.progressBarStats);
         mRecyclerView = findViewById(R.id.stats_list);
-        database = FirebaseDatabase.getInstance();
-        statsRef = database.getReference("stats");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference statsRef = database.getReference("stats");
         statistics = new ArrayList<>();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         statsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                
+
                 for (DataSnapshot ds : dataSnapshot.getChildren())
                 {
                     GameStatistics value = ds.getValue(GameStatistics.class);
-                    if (value.getPlayer_1().equals(currentUser.getDisplayName()) ||
+                    if (Objects.requireNonNull(value).getPlayer_1().equals(currentUser.getDisplayName()) ||
                             value.getPlayer_2().equals(currentUser.getDisplayName()))
                         statistics.add(value);
                 }

@@ -8,7 +8,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +51,6 @@ public class CreateFieldActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
     private DatabaseReference game;
-    private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
     @Override
@@ -64,7 +62,7 @@ public class CreateFieldActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progressBarJoinGame2);
         mProgressBar.setVisibility(View.GONE);
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
         fieldView = findViewById(R.id.player_field);
@@ -162,7 +160,7 @@ public class CreateFieldActivity extends AppCompatActivity {
             public void onClick(View view) {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("simple text", idView.getText());
-                clipboard.setPrimaryClip(clip);
+                Objects.requireNonNull(clipboard).setPrimaryClip(clip);
                 Toast.makeText(getApplicationContext(), "Id copied to Clipboard",
                         Toast.LENGTH_LONG).show();
             }
@@ -210,7 +208,7 @@ public class CreateFieldActivity extends AppCompatActivity {
         this.finish();
     }
 
-    public void connect(Boolean start)
+    private void connect(Boolean start)
     {
         database = FirebaseDatabase.getInstance();
         game = database.getReference("games").child(id);

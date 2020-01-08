@@ -7,11 +7,7 @@ public class GameStatistics {
     private int score_1;
     private int score_2;
 
-    public GameStatistics()
-    {
-
-    }
-
+    public GameStatistics()  { }
 
     public GameStatistics(String p1, String p2, int sc1, int sc2)
     {

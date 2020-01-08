@@ -28,8 +28,6 @@ import com.google.gson.Gson;
 import com.example.battleshipgame.Grid.FieldView;
 import com.example.battleshipgame.Models.Field;
 import com.example.battleshipgame.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.reflect.TypeToken;
@@ -40,9 +38,6 @@ import java.util.Objects;
 public class GameActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
-    private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
-    private DatabaseReference game;
     private DatabaseReference player_1_field_db;
     private DatabaseReference player_2_field_db;
     private DatabaseReference player_1;
@@ -111,7 +106,7 @@ public class GameActivity extends AppCompatActivity {
         player_2_field.setFieldMode(CurrentFieldMode.READONLY);
 
         database = FirebaseDatabase.getInstance();
-        game = database.getReference("games").child(gameId);
+        DatabaseReference game = database.getReference("games").child(gameId);
         currentMove = game.child("currentMoveByPlayer");
         player_1_field_db = game.child("player_1_field");
         player_2_field_db = game.child("player_2_field");
@@ -123,7 +118,7 @@ public class GameActivity extends AppCompatActivity {
         player_2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.getValue(String.class).equals("")) {
+                if (!Objects.requireNonNull(dataSnapshot.getValue(String.class)).equals("")) {
                     initFirstPlayerField();
                     initSecondPlayerField();
                     trackCurrentMove();
@@ -203,7 +198,7 @@ public class GameActivity extends AppCompatActivity {
                 String value = dataSnapshot.getValue(String.class);
                 if (started_game)
                 {
-                    if (value.equals("p_1_move"))
+                    if (Objects.requireNonNull(value).equals("p_1_move"))
                     {
                         currentMoveMessage(true);
                         player_2_field.setFieldMode(CurrentFieldMode.OPPONENT);
@@ -214,7 +209,7 @@ public class GameActivity extends AppCompatActivity {
                     }
                 }
                 else {
-                    if (value.equals("p_2_move"))
+                    if (Objects.requireNonNull(value).equals("p_2_move"))
                     {
                         currentMoveMessage(true);
                         player_2_field.setFieldMode(CurrentFieldMode.OPPONENT);
@@ -231,7 +226,6 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         };
         currentMove.addValueEventListener(moveChangesListener);
@@ -267,7 +261,7 @@ public class GameActivity extends AppCompatActivity {
                     onBackPressed();
                     return;
                 }
-                if (dataSnapshot.getValue(String.class).isEmpty()) {
+                if (Objects.requireNonNull(dataSnapshot.getValue(String.class)).isEmpty()) {
                     finish();
                     return;
                 }
@@ -298,12 +292,12 @@ public class GameActivity extends AppCompatActivity {
                     onBackPressed();
                     return;
                 }
-                if (dataSnapshot.getValue(String.class).isEmpty() && secondPlayerJoined) {
+                if (Objects.requireNonNull(dataSnapshot.getValue(String.class)).isEmpty() && secondPlayerJoined) {
                     finish();
                     return;
                 }
                 String value = dataSnapshot.getValue(String.class);
-                if (!value.isEmpty()) {
+                if (!Objects.requireNonNull(value).isEmpty()) {
                     Gson gson = new Gson();
                     Type type = new TypeToken<Field>() {
                     }.getType();
@@ -330,7 +324,7 @@ public class GameActivity extends AppCompatActivity {
                     return;
                 }
                 String value = dataSnapshot.getValue(String.class);
-                if (!value.isEmpty() && started_game)
+                if (!Objects.requireNonNull(value).isEmpty() && started_game)
                 {
                     secondPlayerJoined = true;
                     player_2_field.setFieldMode(CurrentFieldMode.OPPONENT);
