@@ -1,6 +1,8 @@
 package com.example.battleshipgame.Models;
 
-public class Field {
+import java.io.Serializable;
+
+public class Field  implements Serializable {
 
     public final int height;
     public final int width;

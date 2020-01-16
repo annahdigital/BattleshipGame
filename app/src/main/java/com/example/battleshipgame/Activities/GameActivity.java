@@ -158,6 +158,10 @@ public class GameActivity extends AppCompatActivity {
         else if (moveType == MoveType.HIT)
         {
             currentMoveStatusMessage();
+            /*Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator.hasVibrator()) {
+                vibrator.vibrate(100L);
+            }*/
             if (started_game) {
                 score1++;
                 player_1_score.setValue(score1);

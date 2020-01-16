@@ -20,6 +20,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.battleshipgame.Grid.CurrentFieldMode;
 import com.example.battleshipgame.Models.Field;
 import com.example.battleshipgame.Models.GameStatus;
 import com.google.gson.Gson;
@@ -66,7 +67,12 @@ public class CreateFieldActivity extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser();
 
         fieldView = findViewById(R.id.player_field);
-        fieldView.createField();
+        if (savedInstanceState == null)
+            fieldView.createField();
+        else {
+            Field field = (Field) savedInstanceState.getSerializable("field");
+            fieldView.setField(field, CurrentFieldMode.CREATION);
+        }
         FloatingActionButton fab = findViewById(R.id.floatingActionButtonInfo2);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,6 +267,12 @@ public class CreateFieldActivity extends AppCompatActivity {
             game.addValueEventListener(checkListener);
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("field", fieldView.getField());
     }
 
     private void showError()

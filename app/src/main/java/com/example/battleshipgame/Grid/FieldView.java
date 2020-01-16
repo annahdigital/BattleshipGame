@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -28,6 +29,7 @@ public class FieldView extends View {
     private Paint RedPaint;
     private Paint GreyishPaint;
     private Paint FieldGridPaint;
+    private Paint GreyPaint;
 
     private int cellWidth;
     private int cellHeight;
@@ -67,6 +69,8 @@ public class FieldView extends View {
         GreyishPaint.setColor(ContextCompat.getColor(context,R.color.missed_greyish));
         FieldGridPaint = new Paint();
         FieldGridPaint.setColor(ContextCompat.getColor(context, R.color.colorPrimaryDarkest));
+        GreyPaint = new Paint();
+        GreyPaint.setColor(ContextCompat.getColor(context, R.color.colorGrey));
     }
 
     public void createField()
@@ -124,19 +128,6 @@ public class FieldView extends View {
         int width = getWidth();
         int height = getHeight();
 
-        for (int i = 1; i < field.width; i++) {
-            canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, FieldGridPaint);
-        }
-
-        for (int i = 1; i < field.height; i++) {
-            canvas.drawLine(0, i * cellHeight, width, i * cellHeight, FieldGridPaint);
-        }
-
-        canvas.drawLine(0, 0, 0, height, FieldGridPaint);
-        canvas.drawLine(width, 0, width, height, FieldGridPaint);
-        canvas.drawLine(0, 0, width, 0, FieldGridPaint);
-        canvas.drawLine(0, height, width, height, FieldGridPaint);
-
         for (int i = 0; i < field.height; i++)
         {
             for (int j = 0; j < field.width; j++)
@@ -151,13 +142,30 @@ public class FieldView extends View {
                 else if (field.getCell(i, j) == CellMode.MISS)
                 {
                     canvas.drawRect(i*cellWidth, j * cellHeight, (i+1) * cellWidth, (j+1) * cellHeight, GreyishPaint);
+                    canvas.drawCircle(i  * cellWidth + 0.5f * cellWidth, j * cellHeight + 0.5f * cellHeight, cellWidth / 7, GreyPaint);
                 }
                 else if (field.getCell(i , j) == CellMode.HIT)
                 {
                     canvas.drawRect(i*cellWidth, j * cellHeight, (i+1) * cellWidth, (j+1) * cellHeight, RedPaint);
+                    Drawable d = getResources().getDrawable(R.drawable.hit_fire, null);
+                    d.setBounds(i*cellWidth, j * cellHeight, (i+1) * cellWidth, (j+1) * cellHeight);
+                    d.draw(canvas);
                 }
             }
         }
+
+        for (int i = 1; i < field.width; i++) {
+            canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, FieldGridPaint);
+        }
+
+        for (int i = 1; i < field.height; i++) {
+            canvas.drawLine(0, i * cellHeight, width, i * cellHeight, FieldGridPaint);
+        }
+
+        canvas.drawLine(0, 0, 0, height, FieldGridPaint);
+        canvas.drawLine(width, 0, width, height, FieldGridPaint);
+        canvas.drawLine(0, 0, width, 0, FieldGridPaint);
+        canvas.drawLine(0, height, width, height, FieldGridPaint);
     }
 
     @Override

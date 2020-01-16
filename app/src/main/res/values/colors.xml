@@ -7,6 +7,7 @@
     <color name="colorPrimaryDarkest">#7F3849</color>
     <color name="colorAccent">#CC5976</color>
     <color name="attacked_red">#b7173a</color>
-    <color name="missed_greyish">#c1b9ce</color>
+    <color name="missed_greyish">#d7d2df</color>
+    <color name="colorGrey">#8d8796</color>
     <color name="ship_color">#ce7dc1</color>
 </resources>
