@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -381,6 +383,7 @@ public class GameActivity extends AppCompatActivity {
                 if (started_game) {
                     player_2_name.setText(value);
                     player_2_name_field.setText(value);
+
                 }
                 else {
                     player_1_name.setText(value);
@@ -538,6 +541,10 @@ public class GameActivity extends AppCompatActivity {
                     player_1_scoreView.setText(String.valueOf(score1));
                 }
                 else {
+                    Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    if (vibrator.hasVibrator()) {
+                        vibrator.vibrate(100L);
+                    }
                     player_2_scoreView.setText(String.valueOf(score1));
                 }
                 if (value == winPoints)
@@ -570,6 +577,10 @@ public class GameActivity extends AppCompatActivity {
                 score2 = value;
                 if (started_game)
                 {
+                    Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    if (vibrator.hasVibrator()) {
+                        vibrator.vibrate(100L);
+                    }
                     player_2_scoreView.setText(String.valueOf(score2));
                 }
                 else {
