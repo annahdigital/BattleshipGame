@@ -84,7 +84,7 @@ public class CreateFieldActivity extends AppCompatActivity {
         goToGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!fieldView.endCreation())
+                if (!fieldView.finalCheck())
                     showError();
                 else {
                     if (startingGame)
