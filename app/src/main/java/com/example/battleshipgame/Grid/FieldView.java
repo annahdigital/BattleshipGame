@@ -20,6 +20,8 @@ import com.example.battleshipgame.Models.CellMode;
 import com.example.battleshipgame.Models.Field;
 import com.example.battleshipgame.Models.MoveType;
 import com.example.battleshipgame.R;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 public class FieldView extends View {
 
@@ -180,6 +182,7 @@ public class FieldView extends View {
                         field.setCellMode(CellMode.MISS, x, y);
                         ((GameActivity)this.context).updatingMove(MoveType.MISS);
                     } else if (field.getCell(x, y) == CellMode.SHIP) {
+                        //new FieldChecker(field).checkIfShipIsKilled(x, y);
                         field.setCellMode(CellMode.HIT, x, y);
                         ((GameActivity)this.context).updatingMove(MoveType.HIT);
                     }
@@ -198,7 +201,7 @@ public class FieldView extends View {
 
     private void showError()
     {
-        Toast toast = Toast.makeText(context,
+       /* Toast toast = Toast.makeText(context,
                 "Incorrect placement for ships.",
                 Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
@@ -206,7 +209,9 @@ public class FieldView extends View {
         ImageView catImageView = new ImageView(context);
         catImageView.setImageResource(R.drawable.kitty_wow);
         toastContainer.addView(catImageView, 0);
-        toast.show();
+        toast.show();*/
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.player_field), "Incorrect placement for ships.", BaseTransientBottomBar.LENGTH_SHORT);
+        snackbar.show();
     }
 
 

@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.example.battleshipgame.Grid.CurrentFieldMode;
 import com.example.battleshipgame.Models.MoveType;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -413,14 +415,16 @@ public class GameActivity extends AppCompatActivity {
             mes = "Your move!";
         else
             mes = "Second player's move!";
-        Toast toast = Toast.makeText(this,
+        /*Toast toast = Toast.makeText(this,
                 mes, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         LinearLayout toastContainer = (LinearLayout) toast.getView();
         ImageView catImageView = new ImageView(this);
         catImageView.setImageResource(R.drawable.kitty);
         toastContainer.addView(catImageView, 0);
-        toast.show();
+        toast.show();*/
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.game_holder), mes, BaseTransientBottomBar.LENGTH_SHORT);
+        snackbar.show();
         if (your)
         {
             myTurnView.setVisibility(View.VISIBLE);
@@ -435,14 +439,16 @@ public class GameActivity extends AppCompatActivity {
     private void currentMoveStatusMessage()
     {
         String mes = "You can hit one more time. :p";
-        Toast toast = Toast.makeText(this,
+        /*Toast toast = Toast.makeText(this,
                 mes, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         LinearLayout toastContainer = (LinearLayout) toast.getView();
         ImageView catImageView = new ImageView(this);
         catImageView.setImageResource(R.drawable.kitty);
         toastContainer.addView(catImageView, 0);
-        toast.show();
+        toast.show();*/
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.game_holder), mes, BaseTransientBottomBar.LENGTH_SHORT);
+        snackbar.show();
     }
 
     private void gameEnded(boolean didWin)

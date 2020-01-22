@@ -1,5 +1,7 @@
 package com.example.battleshipgame.Grid;
 
+import android.util.Log;
+
 import com.example.battleshipgame.Models.CellMode;
 import com.example.battleshipgame.Models.Field;
 
@@ -104,9 +106,8 @@ class FieldChecker {
             else
                 return false;
         }
-        else {
+        else
             return (nearbyShipCellsVertical <= 2 && nearbyShipCellsHorizontal == 0 || nearbyShipCellsVertical == 0 && nearbyShipCellsHorizontal <= 2);
-        }
     }
 
     private boolean checkNeighbors(int i, int j)
@@ -193,6 +194,109 @@ class FieldChecker {
         else if (shipLength == 4)
             currentTorpedosCount++;
         return true;
+    }
+
+    public void checkIfShipIsKilled(int i, int j)
+    {
+        if (field.getCell(i, j) != CellMode.SHIP)
+            return;
+        CellMode leftCell = null, rightCell = null, upperCell = null, lowerCell = null;
+        if (i + 1 < field.width)
+            rightCell = field.getCell(i+1, j);
+        if (j - 1 >= 0)
+            upperCell = field.getCell(i, j-1);
+        if (j + 1 < field.height)
+            lowerCell = field.getCell(i, j+1);
+        if (i - 1 >= 0)
+            leftCell = field.getCell(i-1, j);
+
+        if (leftCell != CellMode.SHIP && rightCell != CellMode.SHIP && upperCell != CellMode.SHIP && lowerCell != CellMode.SHIP
+            && leftCell != CellMode.HIT && rightCell != CellMode.HIT && upperCell != CellMode.HIT && lowerCell != CellMode.HIT)
+        {
+            if (rightCell != null)
+                field.setCellMode(CellMode.MISS,i+1, j);
+            if (upperCell != null)
+                field.setCellMode(CellMode.MISS, i, j-1);
+            if (lowerCell != null)
+                field.setCellMode(CellMode.MISS, i, j+1);
+            if (leftCell != null)
+                field.setCellMode(CellMode.MISS,i-1, j);
+            if (i - 1 >= 0 && j + 1 < field.height)
+                field.setCellMode(CellMode.MISS, i - 1, j + 1);
+            if (i - 1 >= 0 && j - 1 >= 0)
+                field.setCellMode(CellMode.MISS, i - 1, j - 1);
+            if (i + 1 < field.width && j + 1 < field.height)
+                field.setCellMode(CellMode.MISS, i + 1, j + 1);
+            if (i + 1 < field.width && j - 1 >= 0)
+                field.setCellMode(CellMode.MISS, i + 1, j - 1);
+            Log.println(Log.ERROR, "kek", "start");
+            return;
+        }
+
+        int endX = i, endY = j, startX = i, startY = j;
+
+        if (leftCell != CellMode.HIT && rightCell != CellMode.HIT && upperCell != CellMode.HIT && lowerCell != CellMode.HIT)
+            return;
+        if (leftCell == CellMode.SHIP || rightCell == CellMode.SHIP || upperCell == CellMode.SHIP || lowerCell == CellMode.SHIP)
+            return;
+
+        if (leftCell == CellMode.HIT)
+        {
+            startX = i - 1;
+            while (startX -1 >= 0 && field.getCell(startX - 1, j) == CellMode.HIT)
+                startX--;
+            Log.println(Log.ERROR, "kek", String.valueOf(field.getCell(startX, j)));
+            if (startX >= 0 && field.getCell(startX, j) == CellMode.SHIP)
+                return;
+        }
+        if (rightCell == CellMode.HIT)
+        {
+            endX = i + 1;
+            while (endX + 1 < field.width && field.getCell(endX + 1, j) == CellMode.HIT)
+                endX++;
+            Log.println(Log.ERROR, "kek", String.valueOf(field.getCell(endX, j)));
+            if (endX < field.width && field.getCell(endX, j) == CellMode.SHIP)
+                return;
+        }
+        if (upperCell == CellMode.HIT)
+        {
+            startY = j - 1;
+            while (startY - 1 >= 0 && field.getCell(i, startY - 1) == CellMode.HIT)
+                startY--;
+            Log.println(Log.ERROR, "kek", String.valueOf(field.getCell(i, startY)));
+            if (startY  >= 0 && field.getCell(i, startY) == CellMode.SHIP)
+                return;
+        }
+        if (lowerCell == CellMode.HIT)
+        {
+            endY = j + 1;
+            while (endY + 1 < field.height && field.getCell(i, endY + 1) == CellMode.HIT)
+                endY++;
+            Log.println(Log.ERROR, "kek", String.valueOf(field.getCell(i, endY)));
+            if (endY < field.height && field.getCell(i, endY) == CellMode.SHIP)
+                return;
+        }
+
+        if (endX + 1 < field.width && field.getCell(endX + 1, endY) != CellMode.SHIP && field.getCell(endX + 1, endY) != CellMode.HIT)
+            field.setCellMode(CellMode.MISS,endX + 1, endY);
+        if (endY - 1 >= 0  && field.getCell(endX, endY - 1) != CellMode.SHIP && field.getCell(endX, endY - 1) != CellMode.HIT)
+            field.setCellMode(CellMode.MISS, endX, endY - 1);
+        if (endY + 1 < field.height  && field.getCell(endX, endY + 1) != CellMode.SHIP && field.getCell(endX, endY + 1) != CellMode.HIT)
+            field.setCellMode(CellMode.MISS, endX, endY + 1);
+        if (endX - 1 >= 0 && field.getCell(endX - 1, endY) != CellMode.SHIP && field.getCell(endX - 1, endY) != CellMode.HIT)
+            field.setCellMode(CellMode.MISS,endX - 1, endY);
+        if (endX - 1 >= 0 && endY + 1 < field.height)
+            field.setCellMode(CellMode.MISS, endX - 1, endY + 1);
+        if (endX - 1 >= 0 && endY - 1 >= 0)
+            field.setCellMode(CellMode.MISS, endX - 1, endY - 1);
+        if (endX + 1 < field.width && endY + 1 < field.height)
+            field.setCellMode(CellMode.MISS, endX + 1, endY + 1);
+        if (endX + 1 < field.width && endY - 1 >= 0)
+            field.setCellMode(CellMode.MISS, endX + 1, endY - 1);
+
+        Log.println(Log.ERROR, "kek!", "what");
+
+
     }
 
 
