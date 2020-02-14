@@ -1,4 +1,4 @@
-package com.example.battleshipgame.Grid;
+package com.example.battleshipgame.FieldView;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,12 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 

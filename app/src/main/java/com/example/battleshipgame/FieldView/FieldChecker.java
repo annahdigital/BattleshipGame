@@ -1,6 +1,4 @@
-package com.example.battleshipgame.Grid;
-
-import android.util.Log;
+package com.example.battleshipgame.FieldView;
 
 import com.example.battleshipgame.Models.CellMode;
 import com.example.battleshipgame.Models.Field;
@@ -8,7 +6,7 @@ import com.example.battleshipgame.Models.Field;
 
 class FieldChecker {
 
-    private Field field;
+    private final Field field;
 
     // final values for comparing and validating
     private final static int battleshipsCount = 4;
@@ -195,7 +193,7 @@ class FieldChecker {
             currentTorpedosCount++;
         return true;
     }
-
+/*
     public void checkIfShipIsKilled(int i, int j)
     {
         if (field.getCell(i, j) != CellMode.SHIP)
@@ -299,6 +297,6 @@ class FieldChecker {
 
     }
 
-
+*/
 
 }

@@ -20,13 +20,13 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.battleshipgame.Grid.CurrentFieldMode;
+import com.example.battleshipgame.FieldView.CurrentFieldMode;
 import com.example.battleshipgame.Models.Field;
 import com.example.battleshipgame.Models.GameStatus;
 import com.google.gson.Gson;
 import android.widget.Toast;
 
-import com.example.battleshipgame.Grid.FieldView;
+import com.example.battleshipgame.FieldView.FieldView;
 import com.example.battleshipgame.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;

@@ -1,4 +1,4 @@
-package com.example.battleshipgame.Grid;
+package com.example.battleshipgame.FieldView;
 
 public enum CurrentFieldMode {
     CREATION,

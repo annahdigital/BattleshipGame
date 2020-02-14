@@ -6,20 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.battleshipgame.Grid.CurrentFieldMode;
+import com.example.battleshipgame.FieldView.CurrentFieldMode;
 import com.example.battleshipgame.Models.MoveType;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -29,7 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-import com.example.battleshipgame.Grid.FieldView;
+import com.example.battleshipgame.FieldView.FieldView;
 import com.example.battleshipgame.Models.Field;
 import com.example.battleshipgame.R;
 import com.google.firebase.database.DatabaseReference;
@@ -548,7 +545,7 @@ public class GameActivity extends AppCompatActivity {
                 }
                 else {
                     Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                    if (vibrator.hasVibrator()) {
+                    if (Objects.requireNonNull(vibrator).hasVibrator()) {
                         vibrator.vibrate(100L);
                     }
                     player_2_scoreView.setText(String.valueOf(score1));
@@ -584,7 +581,7 @@ public class GameActivity extends AppCompatActivity {
                 if (started_game)
                 {
                     Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                    if (vibrator.hasVibrator()) {
+                    if (Objects.requireNonNull(vibrator).hasVibrator()) {
                         vibrator.vibrate(100L);
                     }
                     player_2_scoreView.setText(String.valueOf(score2));
